@@ -1,0 +1,6 @@
+host: 'localhost'
+adapter: 'postgresql'
+database: 'user-script-scraper-test'
+username: 'MarkyMark'
+encoding: 'utf8'
+pool: 5
