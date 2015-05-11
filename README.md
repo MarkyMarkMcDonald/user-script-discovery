@@ -1,36 +1,13 @@
-ActiveRecord Without Rails
+User Script Discovery
 ==========================
 
-Just a simple example of using ActiveRecord migrations without Rails
+Sinatra + Chrome Extension
 
-tasks you can do:
 
-* `rake db:create`
-* `rake db:migrate`
-* `rake db:drop`
+For indexing user scripts and letting users know when they're on pages with applicable scripts.
 
-Or, you can run the thing to show that it'll connect
+This is a work in progress. There are a few scrapers in progress. I've harvested a sample set of data from open_user_scraper.rb,but it needs to be updated to the current schema.
 
-```
-ruby ar-no-rails
-```
+For playing around with the data:
 
-Output:
-> Count of Pages: 0
-
-Lastly, you can IRB it to do stuff:
-
-$ irb
-
-```
->> require "./ar-no-rails"
-=> true
->> Page.new
-=> #<Page id: nil, content: nil, published: false>
->> Page.create content: "the-content"
-=> #<Page id: 1, content: "the-content", published: false>
-```
-
-Copyright
----------
-None. Really.
+$ irb -r ./db_connector
