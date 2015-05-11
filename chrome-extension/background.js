@@ -4,9 +4,9 @@ function updatePageIcon(tabId) {
     var url = 'http://localhost:4567/scripts?' + $.param({url: current_url});
 
     $.getJSON(url, function(data) {
-      var scriptCount = Math.min(5, data.scripts.length);
+      var scriptCount = data.scripts.length;
       if (scriptCount > 0) {
-        var path = 'icon_' + scriptCount + '.png';
+        var path = scriptCount > 9 ? '9_plus.png' : scriptCount + '.png';
         chrome.pageAction.setIcon({tabId: tabId, path: path});
         chrome.pageAction.show(tabId);
       }

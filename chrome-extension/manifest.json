@@ -11,6 +11,6 @@
     "https://*/*"
   ],
   "page_action": {
-    "default_icon": "icon_0.png"
+    "default_icon": "1.png"
   }
 }
