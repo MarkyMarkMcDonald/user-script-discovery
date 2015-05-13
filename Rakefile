@@ -4,6 +4,7 @@ require 'bundler/setup'
 require 'pg'
 require 'active_record'
 require 'yaml'
+require './open_user_js_scraper.rb'
 
 namespace :db do
 
@@ -34,4 +35,13 @@ namespace :db do
     ActiveRecord::Base.establish_connection(admin_connection)
     ActiveRecord::Base.connection.drop_database(connection_details.fetch('database'))
   end
+end
+
+namespace :scrape do
+
+  desc 'Scrape data from openuserjs.org'
+  task :open_user_js do
+    OpenUserJsScraper.new.scrape
+  end
+
 end
