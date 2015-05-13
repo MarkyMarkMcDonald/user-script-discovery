@@ -12,8 +12,10 @@ class OpenUserJsScraper
       links_to_script_sources(page_number).each do |script_link|
         script_source = parse_script_source(script_link)
 
+        description = parse_description(script_source)
+
         puts "persisting #{script_link}"
-        script = Script.create(source: 'open_user_js', link: script_link )
+        script = Script.create(source: 'open_user_js', link: script_link, content: script_source, description: description)
 
         includes = parse_inclusions(script_source)
         includes.each do |inclusion|
@@ -30,6 +32,11 @@ class OpenUserJsScraper
 
   private
 
+  def parse_description(script_source)
+    description_line = script_source.lines.find { |line| line =~ /\/\/ @description/ }
+    description_line ? description_line.split('@description').last : ''
+  end
+
   def parse_script_source(script_link)
     begin
       Nokogiri::XML(open(script_link)).css('#editor').text
@@ -40,12 +47,12 @@ class OpenUserJsScraper
     end
   end
 
-  def parse_exclusions(code)
-    code.lines.select { |line| line =~ /\/\/ @exclude/ }.map(&:split).map(&:last).map { |exclude| exclude.gsub('%', '\%').gsub('*', '%') }
+  def parse_exclusions(script_source)
+    script_source.lines.select { |line| line =~ /\/\/ @exclude/ }.map(&:split).map(&:last).map { |exclude| exclude.gsub('%', '\%').gsub('*', '%') }
   end
 
-  def parse_inclusions(code)
-    code.lines.select { |line| line =~ /\/\/ @include/ }.map(&:split).map(&:last).map { |include| include.gsub('%', '\%').gsub('*', '%') }
+  def parse_inclusions(script_source)
+    script_source.lines.select { |line| line =~ /\/\/ @include/ }.map(&:split).map(&:last).map { |include| include.gsub('%', '\%').gsub('*', '%') }
   end
 
   def links_to_script_sources(page_number)
