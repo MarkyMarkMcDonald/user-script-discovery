@@ -2,7 +2,7 @@ chrome.runtime.sendMessage({id: 'scripts'}, null, function(response) {
   var lis = '';
 
   response.scripts.forEach(function(script) {
-    lis += '<li><a href="' + script.link + '">' + script.description + '</a></li>';
+    lis += '<dt><a href="' + script.link + '">' + script.name + '</a><dd class="description">' + script.description + '</span>';
   });
 
   document.getElementById('scripts').innerHTML = lis;
