@@ -11,6 +11,7 @@
     "https://*/*"
   ],
   "page_action": {
-    "default_icon": "1.png"
+    "default_icon": "1.png",
+    "default_popup": "popup.html"
   }
 }
