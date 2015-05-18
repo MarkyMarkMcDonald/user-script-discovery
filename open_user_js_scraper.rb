@@ -13,9 +13,16 @@ class OpenUserJsScraper
         script_source = parse_script_source(script_link)
 
         description = parse_description(script_source)
+        name = parse_name(script_source)
 
         puts "persisting #{script_link}"
-        script = Script.create(source: 'open_user_js', link: script_link, content: script_source, description: description)
+        script = Script.create(
+          source: 'open_user_js',
+          link: script_link,
+          content: script_source,
+          description: description,
+          name: name
+        )
 
         includes = parse_inclusions(script_source)
         includes.each do |inclusion|
@@ -35,6 +42,11 @@ class OpenUserJsScraper
   def parse_description(script_source)
     description_line = script_source.lines.find { |line| line =~ /\/\/ @description/ }
     description_line ? description_line.split('@description').last : ''
+  end
+
+  def parse_name(script_source)
+    name_line = script_source.lines.find { |line| line =~ /\/\/ @name/ }
+    name_line ? name_line.split('@name').last : ''
   end
 
   def parse_script_source(script_link)
