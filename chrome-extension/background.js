@@ -9,7 +9,7 @@ chrome.runtime.onMessage.addListener(function(message, _, callback) {
 function updatePageIcon(tabId) {
   chrome.tabs.query({active: true}, function(tabs) {
     var current_url = tabs[0].url;
-    var url = 'http://localhost:4567/scripts?' + $.param({url: current_url});
+    var url = 'http://script-discovery.cfapps.io/scripts?' + $.param({url: current_url});
 
     $.getJSON(url, function(data) {
       scripts = data.scripts;
