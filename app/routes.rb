@@ -21,7 +21,7 @@ class UserScriptScraper < Sinatra::Base
 
   get '/scripts' do
     url = params[:url]
-    host_name_pattern = "%#{URI(url).host.split('.').first}%"
+    host_name_pattern = "%#{URI(url).host.split('.')[-2]}%"
 
     scripts = Script.joins(:inclusions).where(':url like inclusions.pattern and inclusions.pattern like :host_name_pattern',
       {url: url, host_name_pattern: host_name_pattern})
