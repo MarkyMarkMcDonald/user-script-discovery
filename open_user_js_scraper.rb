@@ -1,7 +1,9 @@
 require 'nokogiri'
 require 'open-uri'
 
-require './db_connector'
+require 'sinatra'
+require 'sinatra/activerecord'
+require './app/models'
 
 class OpenUserJsScraper
 

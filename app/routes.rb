@@ -1,23 +1,37 @@
-require 'sinatra'
+require 'sinatra/base'
 require 'sinatra/jsonp'
 require 'sinatra/cross_origin'
+require 'sinatra/activerecord'
 
-require_relative '../db_connector'
+class UserScriptScraper < Sinatra::Base
 
-set :protection, :except => :json_csrf
+  register Sinatra::ActiveRecordExtension
+  register Sinatra::CrossOrigin
+  helpers Sinatra::Jsonp
 
-get '/scripts' do
-  cross_origin
+  configure do
+    enable :cross_origin
+  end
 
-  url = params[:url]
-  host_name_pattern = "%#{URI(url).host.split('.').first}%"
+  set :protection, :except => :json_csrf
+  set :database_file, '../config/database.yml'
+  set :logging, true
 
-  scripts = Script.joins(:inclusions).where(':url like inclusions.pattern and inclusions.pattern like :host_name_pattern',
-    {url: url, host_name_pattern: host_name_pattern})
+  require_relative '../app/models'
 
-  response = {
-    scripts: scripts
-  }
+  get '/scripts' do
+    url = params[:url]
+    host_name_pattern = "%#{URI(url).host.split('.').first}%"
 
-  JSONP response
+    scripts = Script.joins(:inclusions).where(':url like inclusions.pattern and inclusions.pattern like :host_name_pattern',
+      {url: url, host_name_pattern: host_name_pattern})
+
+    response = {
+      scripts: scripts
+    }
+
+    puts "#{scripts.length} scripts found for #{url}"
+
+    JSONP response
+  end
 end
