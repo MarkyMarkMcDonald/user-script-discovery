@@ -1,16 +1,23 @@
 require 'nokogiri'
 require 'open-uri'
 
-starting_url = 'http://userscripts-mirror.org/scripts.html'
+MAX_PAGES = 100
 
-starting_page = Nokogiri::XML(open(starting_url)) do |config|
-  config.options = Nokogiri::XML::ParseOptions::NOERROR | Nokogiri::XML::ParseOptions::NONET
+next_link = 'http://userscripts-mirror.org/scripts.html'
+
+script_links = []
+
+(1..MAX_PAGES).each do |page_number|
+  userscripts_xml = open(next_link)
+
+  starting_page = Nokogiri::HTML(userscripts_xml)
+
+  script_links << starting_page.to_s.scan(/^.*script.*class="title".*$/).map {|line|
+    line.match(/href="(?<href>.*?)"/)[:href]
+  }
+
+  next_link = "http://userscripts-mirror.org/#{starting_page.css('a.next_page').attr('href')}"
+  sleep 0.125
 end
 
-script_links = starting_page.css('tbody tr .script-meat a').map { |script| script.attr('href') }
-
-next_link = starting_page.css('a.next_page').attr('href')
-
-puts script_links.length
-puts next_link
-
+puts script_links.flatten.join(', ')
